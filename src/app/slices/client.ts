@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Message } from "../../typings";
+import { Message, Room, User } from "../../typings";
+import { AppState } from "../store";
 
 
 export const enum ConnectionState {
@@ -10,10 +11,17 @@ export const enum ConnectionState {
 }
 
 export interface ClientState {
+	user: Omit<User, "rooms">;
+	rooms: Record<string, Room>;
 	connection: ConnectionState;
 }
 
 const initialState: ClientState = {
+	user: {
+		id: "",
+		name: "",
+	},
+	rooms: {},
 	connection: ConnectionState.Disconnected,
 };
 
@@ -21,7 +29,7 @@ const clientSlice = createSlice({
 	name: "client",
 	initialState,
 	reducers: {
-		clientConnecting: state => {
+		connectClient: state => {
 			state.connection = ConnectionState.Connecting;
 		},
 
@@ -29,11 +37,61 @@ const clientSlice = createSlice({
 			state.connection = ConnectionState.Connected;
 		},
 
-		sendMessage: (state, action: PayloadAction<Message>) => {},
+		requestClientData: (_, __: PayloadAction<string>) => {},
 
-		deleteMessage: (state, action: PayloadAction<Message>) => {},
+		receivedClientData: (state, action: PayloadAction<User>) => {
+			const { id, name, rooms } = action.payload;
+
+			state.user.id = id;
+			state.user.name = name;
+
+			for (const room of rooms) {
+				state.rooms[room.id] = room;
+			}
+		},
+
+		requestAllRooms: () => {},
+
+		requestAllRoomMessages: (_, __: PayloadAction<string>) => {},
+
+		createMessage: (_, __: PayloadAction<Omit<Message, "id" | "createdAt">>) => {},
+
+		createdMessage: (state, action: PayloadAction<Message>) => {
+			const { room } = action.payload;
+
+			if (!(room.id in state.rooms)) return;
+
+			state.rooms[room.id].messages.push(action.payload);
+		},
+
+		deleteMessage: (_, __: PayloadAction<Message>) => {},
+
+		deletedMessage: (state, action: PayloadAction<Message>) => {
+			const { room } = action.payload;
+
+			if (!(room.id in state.rooms)) return;
+
+			const roomMessages = state.rooms[room.id].messages;
+			const foundIndex = roomMessages.findIndex(msg => msg.id === action.payload.id);
+
+			if (foundIndex) {
+				roomMessages.splice(foundIndex, 1);
+			}
+		},
 	},
 });
 
-export const { clientConnected, clientConnecting, deleteMessage, sendMessage } = clientSlice.actions;
+export const {
+	clientConnected,
+	connectClient,
+	requestAllRoomMessages,
+	deleteMessage,
+	deletedMessage,
+	createMessage,
+	createdMessage,
+	requestAllRooms,
+	requestClientData,
+	receivedClientData,
+} = clientSlice.actions;
+
 export default clientSlice;
