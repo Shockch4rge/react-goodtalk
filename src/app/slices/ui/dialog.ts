@@ -5,15 +5,11 @@ interface DialogState {
 	open: boolean;
 }
 
-interface InitialState {
-	type: Record<"common", DialogState>;
-}
+type DialogTypes = "common"
 
-const initialState: InitialState = {
-	type: {
-		common: {
-			open: false,
-		},
+const initialState: Record<DialogTypes, DialogState> = {
+	common: {
+		open: false,
 	},
 };
 
@@ -21,11 +17,8 @@ const dialogSlice = createSlice({
 	name: "dialogs",
 	initialState,
 	reducers: {
-		setDialog: (
-			state,
-			action: PayloadAction<{ type: keyof typeof initialState.type; open: boolean }>
-		) => {
-			state.type[action.payload.type].open = action.payload.open;
+		setDialog: (state, action: PayloadAction<{ type: keyof typeof initialState; open: boolean }>) => {
+			state[action.payload.type].open = action.payload.open;
 		},
 	},
 });
