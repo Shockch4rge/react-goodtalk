@@ -1,9 +1,7 @@
 import { useEffect } from "react";
-import { Provider } from "react-redux";
 import { useRoutes } from "react-router-dom";
 
 import { connectClient, ConnectionState } from "./app/slices/client";
-import store from "./app/store";
 import { useAppDispatch, useAppSelector } from "./hooks";
 import { ChatPage, HomePage } from "./pages/_index";
 
