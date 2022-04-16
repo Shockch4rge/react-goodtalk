@@ -10,11 +10,12 @@ import store from "./app/store";
 
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-	<React.StrictMode>
+	// TODO: Strict mode renders App twice so two socket connections
+	// <React.StrictMode>
 		<Provider store={store}>
 			<Router>
 				<App />
 			</Router>
 		</Provider>
-	</React.StrictMode>
+	// </React.StrictMode>
 );
