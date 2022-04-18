@@ -1,7 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
 import socketMiddleware from "./middleware/socketEvents";
-import chatSlice from "./slices/chat";
 import clientSlice from "./slices/client";
 import dialogSlice from "./slices/ui/dialog";
 import snackSlice from "./slices/ui/snack";
@@ -14,7 +13,6 @@ const uiReducer = combineReducers({
 
 const rootReducer = combineReducers({
 	ui: uiReducer,
-	[chatSlice.name]: chatSlice.reducer,
 	[clientSlice.name]: clientSlice.reducer,
 });
 

@@ -50,9 +50,12 @@ const clientSlice = createSlice({
 			}
 		},
 
-		requestAllRooms: () => {},
-
 		requestAllRoomMessages: (_, __: PayloadAction<string>) => {},
+
+		receivedAllRoomMessages: (state, action: PayloadAction<Message[]>) => {
+			const messages = action.payload;
+			state.rooms[messages[0].room.id].messages = messages;
+		},
 
 		createMessage: (_, __: PayloadAction<Omit<Message, "id" | "createdAt">>) => {},
 
@@ -85,11 +88,11 @@ export const {
 	clientConnected,
 	connectClient,
 	requestAllRoomMessages,
+	receivedAllRoomMessages,
 	deleteMessage,
 	deletedMessage,
 	createMessage,
 	createdMessage,
-	requestAllRooms,
 	requestClientData,
 	receivedClientData,
 } = clientSlice.actions;
