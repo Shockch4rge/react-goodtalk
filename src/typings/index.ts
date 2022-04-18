@@ -6,8 +6,8 @@ export type Message = {
 	id: string;
 	content: string;
 	createdAt: Date;
-	authorId: string;
-	roomId: string;
+	author: User;
+	room: Room;
 };
 
 /**
@@ -17,6 +17,7 @@ export type Message = {
 export type User = {
 	id: string;
 	name: string;
+	rooms: Room[];
 };
 
 /**
@@ -28,4 +29,5 @@ export type Room = {
 	name: string;
 	description: string;
 	createdAt: Date;
+	messages: Message[];
 };
