@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { useRoutes } from "react-router-dom";
 
 import { connectClient, ConnectionState } from "./app/slices/client";
+import { Snack } from "./components/common/Snack";
 import { useAppDispatch, useAppSelector } from "./hooks";
-import { ChatPage, HomePage } from "./pages/_index";
+import { ChatPage, HomePage, NotFoundPage } from "./pages";
 
 
 const App = () => {
@@ -32,11 +33,16 @@ const App = () => {
 		},
 		{
 			path: "*",
-			element: <HomePage />,
+			element: <NotFoundPage />,
 		},
 	]);
 
-	return <>{routes}</>;
+	return (
+		<>
+			{routes}
+			<Snack />
+		</>
+	);
 };
 
 export default App;
