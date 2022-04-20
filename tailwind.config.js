@@ -2,7 +2,7 @@ const plugin = require("tailwindcss/plugin");
 const colors = require("tailwindcss/colors");
 
 module.exports = {
-	content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+	content: ["./index.html", "./src/**/*.{jsx,tsx}"],
 	theme: {
 		extend: {
 			colors: {
@@ -34,6 +34,15 @@ module.exports = {
 					"&:hover": {
 						backgroundColor: colors.gray["100"],
 					},
+				},
+
+				".chat-msg-primary": {
+					backgroundImage: "var(--primary-gradient)",
+					border: "1px solid #59A1FF",
+				},
+
+				".chat-msg-secondary": {
+					backgroundColor: "#202020",
 				},
 			});
 		}),
