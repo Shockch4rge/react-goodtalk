@@ -5,7 +5,7 @@ interface DialogState {
 	open: boolean;
 }
 
-type DialogTypes = "common"
+type DialogTypes = "common";
 
 const initialState: Record<DialogTypes, DialogState> = {
 	common: {

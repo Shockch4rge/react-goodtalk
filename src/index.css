@@ -4,7 +4,6 @@
 
 body {
 	background: #292929;
-	margin: 0;
 	width: 100%;
 	height: 100%;
 	max-width: 100%;
@@ -24,8 +23,19 @@ body {
 
 .center-x {
 	position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
+	left: 50%;
+	transform: translate(-50%, 0);
+}
+
+.text-input {
+	display: inline-block;
+    min-height: 27px;
+	max-height: 81px;
+	overflow-y: scroll;
+}
+
+textarea {
+	line-height: 1.1;
 }
 
 :root {

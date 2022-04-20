@@ -9,7 +9,6 @@ export const enum ConnectionState {
 	Connected = "CLIENT_CONNECTED",
 	Disconnected = "CLIENT_DISCONNECTED",
 }
-
 export interface ClientState {
 	user: Omit<User, "rooms">;
 	rooms: Record<string, Room>;
@@ -54,7 +53,9 @@ const clientSlice = createSlice({
 
 		receivedAllRoomMessages: (state, action: PayloadAction<Message[]>) => {
 			const messages = action.payload;
-			state.rooms[messages[0].room.id].messages = messages;
+			// TODO: SHOULD BE room.id (i think)
+			// @ts-ignore
+			state.rooms[messages[0].roomId].messages = messages;
 		},
 
 		createMessage: (_, __: PayloadAction<Omit<Message, "id" | "createdAt">>) => {},

@@ -2,14 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 interface SnackState {
-	open?: boolean;
-	message?: string;
+	text: string;
 	type: "success" | "info" | "warning" | "error";
 }
 
 const initialState: SnackState = {
-	open: false,
-	message: "",
+	text: "",
 	type: "success",
 };
 
@@ -17,11 +15,10 @@ const snackSlice = createSlice({
 	name: "snack",
 	initialState,
 	reducers: {
-		createSnack: (state, action: PayloadAction<SnackState>) => {
+		createSnack: (_, action: PayloadAction<SnackState>) => {
 			return {
-				show: action.payload.open ?? true,
-				message: action.payload.message ?? state.message ?? "",
-				type: action.payload.type ?? state.type ?? "success",
+				text: action.payload.text,
+				type: action.payload.type,
 			};
 		},
 	},

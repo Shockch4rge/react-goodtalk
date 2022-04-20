@@ -3,10 +3,10 @@ import { io, Socket } from "socket.io-client";
 import { Action, Middleware } from "@reduxjs/toolkit";
 
 import { ClientEvents, ServerEvents } from "../../typings/events";
-import { receivedAllRoomMessages, receivedAllRooms } from "../slices/chat";
 import {
     clientConnected, connectClient, ConnectionState, createdMessage, createMessage, deletedMessage,
-    deleteMessage, receivedClientData, requestAllRoomMessages, requestAllRooms, requestClientData
+    deleteMessage, receivedAllRoomMessages, receivedClientData, requestAllRoomMessages,
+    requestClientData
 } from "../slices/client";
 import { AppState } from "../store";
 
@@ -24,8 +24,16 @@ const socketMiddleware: Middleware<{}, AppState> = store => {
 
 			socket.on("connect", () => {
 				store.dispatch(clientConnected());
-				const id = "cl21tl1dj00073susq35zeits";
-				store.dispatch(requestClientData(id));
+
+				let clientId = localStorage.getItem("clientId");
+
+				if (clientId) {
+					return;
+				}
+
+				clientId = "cl25tcykz0007twus1z79sh72";
+				localStorage.setItem("clientId", clientId);
+				// store.dispatch(requestClientData(clientId));
 			});
 
 			socket.on("createdMessage", message => {
@@ -37,11 +45,9 @@ const socketMiddleware: Middleware<{}, AppState> = store => {
 			});
 
 			socket.on("sentAllRoomMessages", messages => {
-				store.dispatch(receivedAllRoomMessages(messages));
-			});
+				console.log(messages);
 
-			socket.on("sentAllRooms", rooms => {
-				store.dispatch(receivedAllRooms(rooms));
+				store.dispatch(receivedAllRoomMessages(messages));
 			});
 
 			socket.on("sentClientData", client => {
@@ -55,10 +61,6 @@ const socketMiddleware: Middleware<{}, AppState> = store => {
 
 		if (deleteMessage.match(action) && isConnected) {
 			socket.emit("deleteMessage", action.payload);
-		}
-
-		if (requestAllRooms.match(action) && isConnected) {
-			socket.emit("requestAllRooms");
 		}
 
 		if (requestAllRoomMessages.match(action) && isConnected) {
