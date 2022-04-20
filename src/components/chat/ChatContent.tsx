@@ -1,10 +1,14 @@
 import { useCallback, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { createMessage, requestAllRoomMessages } from "../../app/slices/client";
+import {
+    ConnectionState, createMessage, requestAllRoomMessages, requestClientData
+} from "../../app/slices/client";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { MessageBubble } from "../common";
-import { ChatList } from "./ChatList";
+import { Room } from "../../typings";
+import { ChatMessageBubble } from "../common";
+import { ChatContentInput } from "./ChatContentInput";
+import { ChatContentToolbar } from "./ChatContentToolbar";
 
 
 interface Props {}
@@ -13,27 +17,29 @@ export const ChatContent: React.FC<Props> = () => {
 	const roomId = useParams().id!;
 	const dispatch = useAppDispatch();
 
-	const client = useAppSelector(state => state.client.user);
-	const messages = useAppSelector(state => state.client.rooms[roomId].messages);
+	const client = useAppSelector(state => state.client);
+	const room: Room | undefined = useAppSelector(state => state.client.rooms[roomId]);
+	const messages = room?.messages;
 
 	useEffect(() => {
-		dispatch(requestAllRoomMessages(roomId));
-	}, []);
+		if (client.connection === ConnectionState.Connected) {
+			dispatch(requestClientData(localStorage.getItem("clientId")!));
+		}
+	}, [client.connection]);
+
+	if (!room || !room.messages) {
+		return <>Loading...</>;
+	}
 
 	return (
 		<>
-			<div className="flex flex-col h-screen">
-				<div className="max-w-full pt-4 overflow-y-scroll">
-					<div className="p-4 flex flex-col">
-						{messages.map(msg => (
-							<MessageBubble key={msg.id} message={msg} />
-						))}
-					</div>
-				</div>
-				<footer className="w-full h-36">
-					<ChatList users={[]}/>
-				</footer>
+			<ChatContentToolbar />
+			<div className="w-full h-full p-6 flex flex-col justify-self-stretch bg-zinc-800 overflow-y-scroll">
+				{messages.map(msg => (
+					<ChatMessageBubble key={msg.id} message={msg} />
+				))}
 			</div>
+			<ChatContentInput />
 		</>
 	);
 };

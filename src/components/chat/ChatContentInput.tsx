@@ -16,17 +16,15 @@ export const ChatContentInput: React.FC<Props> = ({}) => {
 
 	return (
 		<>
-			<div className="w-full h-full p-4 flex items-center justify-center bg-gray-700">
-				<textarea
-					onChange={e => setContent(e.target.value)}
-					// onSubmit={e => onSubmit(e.currentTarget.value)}
-					className="py-2 px-3 w-full h-fit rounded-lg bg-slate-600 resize-none text-white"
-					minLength={1}
-					placeholder="Type a message"
-				></textarea>
+			<div className="w-full h-auto p-4 flex items-center justify-center bg-gray-700">
+				{/* Input area; we use a div instead of textarea because textarea sucks */}
+				<div
+					className="text-input w-full p-2 bg-slate-600 text-white"
+					onInput={e => setContent(e.currentTarget.textContent!)}
+					contentEditable
+				></div>
+				<button className="btn-primary mx-6 text-white">Send</button>
 			</div>
-
-			<button onClick={() => { }}>Send Message</button>
 		</>
 	);
 };
